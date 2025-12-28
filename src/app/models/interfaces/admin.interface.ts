@@ -1,6 +1,6 @@
 export interface CouponResponse {
   code: string;                   // Format: "SAVE10-{orderNumber}"
-  isUsed: boolean;
+  used: boolean;
   generatedAtOrderNumber: number; // Order that triggered generation
   createdAt: string;              // ISO 8601 timestamp
 }

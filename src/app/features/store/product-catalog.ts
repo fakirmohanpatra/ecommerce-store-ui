@@ -11,7 +11,7 @@ import { ItemResponse, AddToCartRequest } from '../../models';
   selector: 'app-product-catalog',
   imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule],
   templateUrl: './product-catalog.html',
-  styleUrl: './product-catalog.css',
+  styleUrl: './product-catalog.css'
 })
 export class ProductCatalog implements OnInit {
   items: ItemResponse[] = [];
@@ -38,16 +38,30 @@ export class ProductCatalog implements OnInit {
   }
 
   addToCart(item: ItemResponse): void {
+    if (item.stock <= 0) {
+      alert('Item is out of stock!');
+      return;
+    }
+
     const request: AddToCartRequest = {
       itemId: item.itemId,
       quantity: 1
     };
     this.cartService.addItemToCart(this.userId, request).subscribe({
       next: () => {
+        // Decrease stock locally in UI and trigger change detection
+        item.stock = Math.max(0, item.stock - 1);
+        this.items = [...this.items]; // Trigger change detection
         alert('Item added to cart!');
       },
       error: (error) => {
-        console.error('Error adding to cart:', error);
+        // Handle insufficient stock error with item name
+        if (error.error?.message?.includes('Insufficient stock')) {
+          alert(`Insufficient stock for ${item.name}. Available: ${item.stock}`);
+        } else {
+          console.error('Error adding to cart:', error);
+          alert('Error adding item to cart. Please try again.');
+        }
       }
     });
   }

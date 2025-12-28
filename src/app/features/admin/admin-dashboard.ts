@@ -1,40 +1,64 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { MatListModule } from '@angular/material/list';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 import { AdminService } from '../../services/admin.service';
 import { ErrorHandlerService } from '../../services/error-handler.service';
 import { AdminStatsResponse } from '../../models';
+import { MatListModule } from '@angular/material/list';
 
 @Component({
   selector: 'app-admin-dashboard',
   imports: [CommonModule, MatCardModule, MatButtonModule, MatListModule],
   templateUrl: './admin-dashboard.html',
-  styleUrl: './admin-dashboard.css',
+  styleUrl: './admin-dashboard.css'
 })
-export class AdminDashboard implements OnInit {
+export class AdminDashboard implements OnInit, OnDestroy {
   stats: AdminStatsResponse | null = null;
   coupons: string[] = [];
   activeCoupon: string | null = null;
+  activeCouponUsed: boolean = false;
   isGeneratingCoupon = false;
   errorMessage: string | null = null;
 
+  private destroy$ = new Subject<void>();
+
   constructor(
-    private readonly adminService: AdminService,
-    private readonly errorHandler: ErrorHandlerService
+    private adminService: AdminService,
+    private errorHandler: ErrorHandlerService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.loadStats();
     this.loadCoupons();
+    this.loadActiveCouponDetails();
+
+    // Refresh data when navigating to this route
+    this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((event: NavigationEnd) => {
+        if (event.url.includes('/admin')) {
+          this.loadActiveCouponDetails();
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadStats(): void {
     this.adminService.getAdminStats().subscribe({
       next: (data) => {
         this.stats = data;
-        this.activeCoupon = data.activeCoupon;
         this.errorMessage = null; // Clear any previous errors
       },
       error: (error) => {
@@ -43,7 +67,27 @@ export class AdminDashboard implements OnInit {
           this.errorHandler.createContext('Load Admin Stats', 'AdminDashboard')
         );
         this.stats = null;
+      }
+    });
+  }
+
+  loadActiveCouponDetails(): void {
+    this.adminService.getActiveCoupon().subscribe({
+      next: (coupon) => {
+        // Only show as active if the coupon is not used
+        if (coupon.used) {
+          // If backend returns a used coupon, treat it as no active coupon
+          this.activeCoupon = null;
+          this.activeCouponUsed = false;
+        } else {
+          this.activeCoupon = coupon.code;
+          this.activeCouponUsed = false;
+        }
+      },
+      error: (error) => {
+        // If no active coupon or error, show none
         this.activeCoupon = null;
+        this.activeCouponUsed = false;
       }
     });
   }
@@ -83,7 +127,7 @@ export class AdminDashboard implements OnInit {
         this.isGeneratingCoupon = false;
         alert(`New coupon generated: ${coupon.code}`);
         this.loadCoupons();
-        this.loadStats(); // Reload stats to get updated active coupon
+        this.loadActiveCouponDetails(); // Reload active coupon details
       },
       error: (error) => {
         this.isGeneratingCoupon = false;

@@ -17,3 +17,9 @@ mat-card-actions {
   display: flex;
   justify-content: center;
 }
+
+.product-card.out-of-stock {
+  opacity: 0.5;
+  filter: blur(1px);
+  pointer-events: none;
+}

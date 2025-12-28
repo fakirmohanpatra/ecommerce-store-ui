@@ -15,7 +15,7 @@ import { CartResponse, CheckoutRequest } from '../../models';
   selector: 'app-checkout',
   imports: [CommonModule, MatCardModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatDialogModule, FormsModule],
   templateUrl: './checkout.html',
-  styleUrl: './checkout.css',
+  styleUrl: './checkout.css'
 })
 export class Checkout implements OnInit {
   cart: CartResponse | null = null;

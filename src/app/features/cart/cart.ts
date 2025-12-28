@@ -24,12 +24,12 @@ import { FormsModule } from '@angular/forms';
     FormsModule
   ],
   templateUrl: './cart.html',
-  styleUrl: './cart.css',
+  styleUrl: './cart.css'
 })
 export class Cart implements OnInit {
   cart: CartResponse | null = null;
   userId = 'user1'; // Placeholder user ID
-  displayedColumns: string[] = ['name', 'quantity', 'pricePerUnit', 'subtotal', 'actions'];
+  displayedColumns: string[] = ['itemName', 'quantity', 'itemPrice', 'subtotal', 'actions'];
 
   constructor(private readonly cartService: CartService, private readonly router: Router) {}
 
@@ -57,7 +57,12 @@ export class Cart implements OnInit {
         this.loadCart(); // Reload cart after update
       },
       error: (error) => {
-        console.error('Error updating quantity:', error);
+        if (error.error?.message?.includes('Insufficient stock')) {
+          alert(`Insufficient stock for ${item.itemName}. Cannot update quantity to ${qty}.`);
+        } else {
+          console.error('Error updating quantity:', error);
+          alert('Error updating item quantity. Please try again.');
+        }
       }
     });
   }

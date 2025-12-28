@@ -67,7 +67,11 @@
       <mat-card-title>Coupon Management</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <p><strong>Active Coupon:</strong> {{ activeCoupon || 'None' }}</p>
+      <p><strong>Active Coupon:</strong> 
+        <span *ngIf="!activeCoupon">None</span>
+        <span *ngIf="activeCoupon && !activeCouponUsed" class="active-coupon">{{ activeCoupon }}</span>
+        <span *ngIf="activeCoupon && activeCouponUsed" class="used-coupon">{{ activeCoupon }} (Used)</span>
+      </p>
       <p class="info-text">Coupons are automatically generated on every nth order. This manual generation is for admin override.</p>
       <p *ngIf="activeCoupon" class="warning-text">⚠️ Generating a new coupon will replace the existing active coupon.</p>
       <button mat-raised-button color="primary" (click)="generateCoupon()" [disabled]="isGeneratingCoupon">

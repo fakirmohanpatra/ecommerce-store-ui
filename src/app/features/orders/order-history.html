@@ -9,16 +9,16 @@
     <mat-accordion>
       <mat-expansion-panel *ngFor="let order of orders; let i = index">
         <mat-expansion-panel-header>
-          <mat-panel-title>Order #{{ orders.length - i }} - {{ order.createdAt | date:'medium' }}</mat-panel-title>
+          <mat-panel-title>Order #{{ order.orderNumber || (orders.length - i) }} - {{ order.createdAt | date:'medium' }}</mat-panel-title>
           <mat-panel-description>
             Total: ${{ (order.totalAmount || 0).toFixed(2) }}
           </mat-panel-description>
         </mat-expansion-panel-header>
         <div class="order-details">
-          <p><strong>Order Number:</strong> #{{ orders.length - i }}</p>
+          <p><strong>Order Number:</strong> #{{ order.orderNumber || (orders.length - i) }}</p>
           <p><strong>Order ID:</strong> {{ order.orderId }}</p>
           <p><strong>Payment Status:</strong> {{ order.paymentStatus }}</p>
-          <p><strong>Subtotal:</strong> ${{ ((order.totalAmount || 0) + (order.discountAmount || 0)).toFixed(2) }}</p>
+          <p><strong>Subtotal:</strong> ${{ ((order.subtotal || 0) || ((order.totalAmount || 0) + (order.discountAmount || 0))).toFixed(2) }}</p>
           <p><strong>Discount:</strong> ${{ (order.discountAmount || 0).toFixed(2) }}</p>
           <p><strong>Total:</strong> ${{ (order.totalAmount || 0).toFixed(2) }}</p>
           <p *ngIf="order.couponCode"><strong>Coupon:</strong> {{ order.couponCode }}</p>

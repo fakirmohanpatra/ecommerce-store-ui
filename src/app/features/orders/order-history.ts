@@ -11,7 +11,7 @@ import { OrderResponse } from '../../models';
   selector: 'app-order-history',
   imports: [CommonModule, MatCardModule, MatButtonModule, MatExpansionModule],
   templateUrl: './order-history.html',
-  styleUrl: './order-history.css',
+  styleUrl: './order-history.css'
 })
 export class OrderHistory implements OnInit {
   orders: OrderResponse[] = [];

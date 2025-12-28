@@ -32,6 +32,18 @@ mat-card-content h2 {
   margin-bottom: 10px;
 }
 
+.used-coupon {
+  opacity: 0.6;
+  filter: blur(0.5px);
+  text-decoration: line-through;
+  color: #999;
+}
+
+.active-coupon {
+  color: #4caf50;
+  font-weight: 500;
+}
+
 .error-banner {
   background-color: #ffebee;
   border: 1px solid #f44336;

@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-payment-success-popup',
   imports: [],
   templateUrl: './payment-success-popup.html',
-  styleUrl: './payment-success-popup.css',
+  styleUrl: './payment-success-popup.css'
 })
 export class PaymentSuccessPopup {
 
