@@ -12,6 +12,10 @@ A modern, responsive Angular application providing a complete frontend for an ec
 - Responsive design for desktop and mobile
 - Built with Angular Material for a polished UI
 
+## Screenshots and Demo
+
+View screenshots and demo of the application: [Google Drive Folder](https://drive.google.com/drive/folders/1CGlXze19wJEZSu0B10pidosrS7oIrbnC?usp=drive_link)
+
 ## Prerequisites
 
 - Node.js (version 18 or higher)
