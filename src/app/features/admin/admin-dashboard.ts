@@ -126,6 +126,7 @@ export class AdminDashboard implements OnInit, OnDestroy {
       next: (coupon) => {
         this.isGeneratingCoupon = false;
         alert(`New coupon generated: ${coupon.code}`);
+        this.loadStats();
         this.loadCoupons();
         this.loadActiveCouponDetails(); // Reload active coupon details
       },
