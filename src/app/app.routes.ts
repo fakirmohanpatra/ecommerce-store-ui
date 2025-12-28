@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-import { ProductCatalog } from './features/store/product-catalog/product-catalog';
-import { Cart } from './features/cart/cart/cart';
-import { Checkout } from './features/checkout/checkout/checkout';
-import { OrderHistory } from './features/orders/order-history/order-history';
-import { AdminDashboard } from './features/admin/admin-dashboard/admin-dashboard';
+import { ProductCatalog } from './features/store/product-catalog';
+import { Cart } from './features/cart/cart';
+import { Checkout } from './features/checkout/checkout';
+import { OrderHistory } from './features/orders/order-history';
+import { AdminDashboard } from './features/admin/admin-dashboard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/store', pathMatch: 'full' },

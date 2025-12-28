@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { OrderService } from '../../../services/order.service';
-import { OrderResponse } from '../../../models';
+import { OrderService } from '../../services/order.service';
+import { OrderResponse } from '../../models';
 
 @Component({
   selector: 'app-order-history',

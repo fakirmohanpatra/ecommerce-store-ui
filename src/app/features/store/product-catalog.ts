@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { ItemService } from '../../../services/item.service';
-import { CartService } from '../../../services/cart.service';
-import { ItemResponse, AddToCartRequest } from '../../../models';
+import { ItemService } from '../../services/item.service';
+import { CartService } from '../../services/cart.service';
+import { ItemResponse, AddToCartRequest } from '../../models';
 
 @Component({
   selector: 'app-product-catalog',

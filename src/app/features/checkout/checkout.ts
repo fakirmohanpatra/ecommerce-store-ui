@@ -7,9 +7,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CartService } from '../../../services/cart.service';
-import { OrderService } from '../../../services/order.service';
-import { CartResponse, CheckoutRequest } from '../../../models';
+import { CartService } from '../../services/cart.service';
+import { OrderService } from '../../services/order.service';
+import { CartResponse, CheckoutRequest } from '../../models';
 
 @Component({
   selector: 'app-checkout',

@@ -7,8 +7,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { Router } from '@angular/router';
-import { CartService } from '../../../services/cart.service';
-import { CartResponse, CartItemResponse, UpdateCartItemRequest } from '../../../models';
+import { CartService } from '../../services/cart.service';
+import { CartResponse, CartItemResponse, UpdateCartItemRequest } from '../../models';
 import { FormsModule } from '@angular/forms';
 
 @Component({
