@@ -22,13 +22,13 @@ export class AdminDashboard implements OnInit {
   ngOnInit(): void {
     this.loadStats();
     this.loadCoupons();
-    this.loadActiveCoupon();
   }
 
   loadStats(): void {
     this.adminService.getAdminStats().subscribe({
       next: (data) => {
         this.stats = data;
+        this.activeCoupon = data.activeCoupon;
       },
       error: (error) => {
         console.error('Error loading stats:', error);
@@ -47,23 +47,12 @@ export class AdminDashboard implements OnInit {
     });
   }
 
-  loadActiveCoupon(): void {
-    this.adminService.getActiveCoupon().subscribe({
-      next: (data) => {
-        this.activeCoupon = data.code;
-      },
-      error: (error) => {
-        console.error('Error loading active coupon:', error);
-      }
-    });
-  }
-
   generateCoupon(): void {
     this.adminService.generateCoupon().subscribe({
       next: (coupon) => {
         alert(`New coupon generated: ${coupon.code}`);
         this.loadCoupons();
-        this.loadActiveCoupon();
+        this.loadStats(); // Reload stats to get updated active coupon
       },
       error: (error) => {
         console.error('Error generating coupon:', error);

@@ -6,9 +6,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { CartService } from '../../../services/cart.service';
 import { CartResponse, CartItemResponse, UpdateCartItemRequest } from '../../../models';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-cart',
@@ -30,7 +31,7 @@ export class Cart implements OnInit {
   userId = 'user1'; // Placeholder user ID
   displayedColumns: string[] = ['name', 'quantity', 'pricePerUnit', 'subtotal', 'actions'];
 
-  constructor(private readonly cartService: CartService) {}
+  constructor(private readonly cartService: CartService, private readonly router: Router) {}
 
   ngOnInit(): void {
     this.loadCart();
@@ -47,9 +48,10 @@ export class Cart implements OnInit {
     });
   }
 
-  updateQuantity(item: CartItemResponse, newQuantity: number): void {
-    if (newQuantity < 1) return;
-    const request: UpdateCartItemRequest = { quantity: newQuantity };
+  updateQuantity(item: CartItemResponse, newQuantity: string): void {
+    const qty = Number.parseInt(newQuantity, 10);
+    if (Number.isNaN(qty) || qty < 1) return;
+    const request: UpdateCartItemRequest = { quantity: qty };
     this.cartService.updateCartItemQuantity(this.userId, item.itemId, request).subscribe({
       next: () => {
         this.loadCart(); // Reload cart after update
@@ -80,5 +82,9 @@ export class Cart implements OnInit {
         console.error('Error clearing cart:', error);
       }
     });
+  }
+
+  proceedToCheckout(): void {
+    this.router.navigate(['/checkout']);
   }
 }

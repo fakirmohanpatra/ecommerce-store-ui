@@ -24,3 +24,8 @@
   font-size: 1.2em;
   margin-top: 10px;
 }
+
+.error-message {
+  color: #f44336;
+  font-weight: bold;
+}

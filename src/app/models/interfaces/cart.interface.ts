@@ -1,9 +1,9 @@
 export interface CartItemResponse {
   itemId: string;        // UUID
-  name: string;
+  itemName: string;
   quantity: number;      // Integer >= 1
-  pricePerUnit: number;  // Price at time of adding to cart
-  subtotal: number;      // quantity × pricePerUnit
+  itemPrice?: number;    // Price at time of adding to cart
+  subtotal?: number;     // quantity × itemPrice
 }
 
 export interface CartResponse {

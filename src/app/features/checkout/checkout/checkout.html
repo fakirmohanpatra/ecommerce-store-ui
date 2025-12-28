@@ -8,8 +8,8 @@
       <mat-card-content>
         <div class="order-items">
           <div *ngFor="let item of cart.items" class="order-item">
-            <span>{{ item.name }} (x{{ item.quantity }})</span>
-            <span>${{ item.subtotal.toFixed(2) }}</span>
+            <span>{{ item.itemName }} (x{{ item.quantity }})</span>
+            <span>${{ (item.subtotal || 0).toFixed(2) }}</span>
           </div>
         </div>
         <div class="order-total">
@@ -27,10 +27,12 @@
           <mat-label>Coupon Code (optional)</mat-label>
           <input matInput [(ngModel)]="couponCode">
         </mat-form-field>
+        <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
         <p>Payment method: Cash on Delivery (simulated)</p>
       </mat-card-content>
       <mat-card-actions>
         <button mat-raised-button color="primary" (click)="checkout()">Place Order</button>
+        <button *ngIf="showProceedWithoutCoupon" mat-button (click)="proceedWithoutCoupon()">Proceed Without Coupon</button>
       </mat-card-actions>
     </mat-card>
   </div>

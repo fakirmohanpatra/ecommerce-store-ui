@@ -6,19 +6,20 @@
         <mat-expansion-panel-header>
           <mat-panel-title>Order #{{ order.orderNumber }}</mat-panel-title>
           <mat-panel-description>
-            {{ order.createdAt | date:'medium' }} - Total: ${{ order.totalAmount.toFixed(2) }}
+            {{ order.createdAt | date:'medium' }} - Total: ${{ (order.totalAmount || 0).toFixed(2) }}
           </mat-panel-description>
         </mat-expansion-panel-header>
         <div class="order-details">
           <p><strong>Order ID:</strong> {{ order.orderId }}</p>
           <p><strong>Payment Status:</strong> {{ order.paymentStatus }}</p>
-          <p><strong>Subtotal:</strong> ${{ order.subtotal.toFixed(2) }}</p>
-          <p><strong>Discount:</strong> ${{ order.discountAmount.toFixed(2) }}</p>
+          <p><strong>Subtotal:</strong> ${{ (order.subtotal || 0).toFixed(2) }}</p>
+          <p><strong>Discount:</strong> ${{ (order.discountAmount || 0).toFixed(2) }}</p>
+          <p><strong>Total:</strong> ${{ (order.totalAmount || 0).toFixed(2) }}</p>
           <p *ngIf="order.couponCode"><strong>Coupon:</strong> {{ order.couponCode }}</p>
           <h3>Items:</h3>
           <ul>
             <li *ngFor="let item of order.items">
-              {{ item.name }} - Quantity: {{ item.quantity }} - Price: ${{ item.pricePerUnit.toFixed(2) }} - Subtotal: ${{ item.subtotal.toFixed(2) }}
+              {{ item.itemName }} - Quantity: {{ item.quantity }} - Price: ${{ (item.itemPrice || 0).toFixed(2) }} - Subtotal: ${{ (item.subtotal || 0).toFixed(2) }}
             </li>
           </ul>
         </div>

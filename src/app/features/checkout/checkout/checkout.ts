@@ -20,6 +20,8 @@ export class Checkout implements OnInit {
   cart: CartResponse | null = null;
   couponCode = '';
   userId = 'user1'; // Placeholder user ID
+  errorMessage = '';
+  showProceedWithoutCoupon = false;
 
   constructor(
     private readonly cartService: CartService,
@@ -45,18 +47,47 @@ export class Checkout implements OnInit {
   checkout(): void {
     if (!this.cart || this.cart.items.length === 0) return;
 
+    const trimmedCoupon = this.couponCode.trim();
     const request: CheckoutRequest = {
       userId: this.userId,
-      couponCode: this.couponCode || ''
+      couponCode: trimmedCoupon || ''
     };
 
     this.orderService.checkout(request).subscribe({
       next: (order) => {
         alert(`Order placed successfully! Order #${order.orderNumber}`);
-        this.router.navigate(['/orders']); // Navigate to order history
+        this.router.navigate(['/orders']);
       },
       error: (error) => {
         console.error('Error during checkout:', error);
+        if (error.error && error.error.message) {
+          this.errorMessage = error.error.message;
+          if (error.error.errorCode === 'INVALID_ARGUMENT' && error.error.message.includes('coupon code')) {
+            this.showProceedWithoutCoupon = true;
+          }
+        } else {
+          this.errorMessage = 'An error occurred during checkout. Please try again.';
+        }
+      }
+    });
+  }
+
+  proceedWithoutCoupon(): void {
+    this.errorMessage = '';
+    this.showProceedWithoutCoupon = false;
+    const request: CheckoutRequest = {
+      userId: this.userId,
+      couponCode: ''
+    };
+
+    this.orderService.checkout(request).subscribe({
+      next: (order) => {
+        alert(`Order placed successfully! Order #${order.orderNumber}`);
+        this.router.navigate(['/orders']);
+      },
+      error: (error) => {
+        console.error('Error during checkout without coupon:', error);
+        this.errorMessage = 'An error occurred during checkout. Please try again.';
       }
     });
   }
