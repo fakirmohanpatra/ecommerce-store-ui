@@ -14,6 +14,7 @@ describe('ItemService', () => {
     });
     service = TestBed.inject(ItemService);
     httpMock = TestBed.inject(HttpTestingController);
+    spyOn(console, 'error');
   });
 
   afterEach(() => {

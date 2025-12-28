@@ -118,6 +118,10 @@ describe('ApiService', () => {
   });
 
   describe('Error handling', () => {
+    beforeEach(() => {
+      spyOn(console, 'error');
+    });
+
     it('should handle network errors', () => {
       const endpoint = '/test';
 
