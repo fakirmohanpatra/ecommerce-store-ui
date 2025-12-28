@@ -4,6 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { OrderService } from '../../services/order.service';
+import { ErrorHandlerService } from '../../services/error-handler.service';
 import { OrderResponse } from '../../models';
 
 @Component({
@@ -15,8 +16,12 @@ import { OrderResponse } from '../../models';
 export class OrderHistory implements OnInit {
   orders: OrderResponse[] = [];
   userId = 'user1'; // Placeholder user ID
+  errorMessage: string | null = null;
 
-  constructor(private readonly orderService: OrderService) {}
+  constructor(
+    private readonly orderService: OrderService,
+    private readonly errorHandler: ErrorHandlerService
+  ) {}
 
   ngOnInit(): void {
     this.loadOrderHistory();
@@ -26,10 +31,19 @@ export class OrderHistory implements OnInit {
     this.orderService.getOrderHistory(this.userId).subscribe({
       next: (data) => {
         this.orders = data;
+        this.errorMessage = null;
       },
       error: (error) => {
-        console.error('Error loading order history:', error);
+        this.errorMessage = this.errorHandler.handleError(
+          error,
+          this.errorHandler.createContext('Load Order History', 'OrderHistory')
+        );
+        this.orders = [];
       }
     });
+  }
+
+  clearError(): void {
+    this.errorMessage = null;
   }
 }

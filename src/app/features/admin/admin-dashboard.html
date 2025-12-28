@@ -1,0 +1,89 @@
+<div class="admin-dashboard">
+  <h1>Admin Dashboard</h1>
+
+  <div *ngIf="errorMessage" class="error-banner">
+    <p>{{ errorMessage }}</p>
+    <button mat-button (click)="clearError()">Dismiss</button>
+  </div>
+
+  <div *ngIf="stats" class="stats-grid">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Total Revenue</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <h2>${{ stats.totalPurchaseAmount.toFixed(2) }}</h2>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Total Orders</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <h2>{{ stats.totalOrders }}</h2>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Items Sold</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <h2>{{ stats.totalItemsPurchased }}</h2>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Total Discounts</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <h2>${{ stats.totalDiscountAmount.toFixed(2) }}</h2>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Orders with Coupons</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <h2>{{ stats.ordersWithCoupons }}</h2>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Coupons Generated</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <h2>{{ stats.totalCouponsGenerated }}</h2>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-card class="coupon-section">
+    <mat-card-header>
+      <mat-card-title>Coupon Management</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p><strong>Active Coupon:</strong> {{ activeCoupon || 'None' }}</p>
+      <p class="info-text">Coupons are automatically generated on every nth order. This manual generation is for admin override.</p>
+      <p *ngIf="activeCoupon" class="warning-text">⚠️ Generating a new coupon will replace the existing active coupon.</p>
+      <button mat-raised-button color="primary" (click)="generateCoupon()" [disabled]="isGeneratingCoupon">
+        {{ isGeneratingCoupon ? 'Generating...' : 'Generate New Coupon' }}
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="coupon-list">
+    <mat-card-header>
+      <mat-card-title>All Coupons</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-list>
+        <mat-list-item *ngFor="let coupon of coupons">{{ coupon }}</mat-list-item>
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
+</div>
