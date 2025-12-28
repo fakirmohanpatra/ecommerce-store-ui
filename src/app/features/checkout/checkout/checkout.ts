@@ -4,6 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CartService } from '../../../services/cart.service';
@@ -12,7 +13,7 @@ import { CartResponse, CheckoutRequest } from '../../../models';
 
 @Component({
   selector: 'app-checkout',
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatInputModule, MatFormFieldModule, FormsModule],
+  imports: [CommonModule, MatCardModule, MatButtonModule, MatInputModule, MatFormFieldModule, MatDialogModule, FormsModule],
   templateUrl: './checkout.html',
   styleUrl: './checkout.css',
 })
@@ -21,12 +22,12 @@ export class Checkout implements OnInit {
   couponCode = '';
   userId = 'user1'; // Placeholder user ID
   errorMessage = '';
-  showProceedWithoutCoupon = false;
 
   constructor(
     private readonly cartService: CartService,
     private readonly orderService: OrderService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -39,7 +40,7 @@ export class Checkout implements OnInit {
         this.cart = data;
       },
       error: (error) => {
-        console.error('Error loading cart:', error);
+        this.errorMessage = 'Failed to load cart. Please try again.';
       }
     });
   }
@@ -55,26 +56,28 @@ export class Checkout implements OnInit {
 
     this.orderService.checkout(request).subscribe({
       next: (order) => {
-        alert(`Order placed successfully! Order #${order.orderNumber}`);
+        alert(`Order placed successfully! Total: $${order.totalAmount?.toFixed(2) || '0.00'}`);
         this.router.navigate(['/orders']);
       },
       error: (error) => {
-        console.error('Error during checkout:', error);
-        if (error.error && error.error.message) {
-          this.errorMessage = error.error.message;
-          if (error.error.errorCode === 'INVALID_ARGUMENT' && error.error.message.includes('coupon code')) {
-            this.showProceedWithoutCoupon = true;
+        if (error.error?.message?.includes('coupon code')) {
+          // Show confirmation dialog for invalid coupon
+          const proceed = confirm('Invalid Coupon Code\n\nThe coupon code you entered is invalid or already used. Would you like to proceed with the order without the coupon?');
+
+          if (proceed) {
+            this.proceedWithoutCoupon();
           }
         } else {
-          this.errorMessage = 'An error occurred during checkout. Please try again.';
+          // Show generic error message
+          this.errorMessage = error.error?.message || 'An error occurred during checkout. Please try again.';
         }
       }
     });
   }
 
   proceedWithoutCoupon(): void {
+    this.couponCode = ''; // Clear the invalid coupon code
     this.errorMessage = '';
-    this.showProceedWithoutCoupon = false;
     const request: CheckoutRequest = {
       userId: this.userId,
       couponCode: ''
@@ -82,12 +85,11 @@ export class Checkout implements OnInit {
 
     this.orderService.checkout(request).subscribe({
       next: (order) => {
-        alert(`Order placed successfully! Order #${order.orderNumber}`);
+        alert(`Order placed successfully! Total: $${order.totalAmount?.toFixed(2) || '0.00'}`);
         this.router.navigate(['/orders']);
       },
       error: (error) => {
-        console.error('Error during checkout without coupon:', error);
-        this.errorMessage = 'An error occurred during checkout. Please try again.';
+        this.errorMessage = error.error?.message || 'An error occurred during checkout. Please try again.';
       }
     });
   }

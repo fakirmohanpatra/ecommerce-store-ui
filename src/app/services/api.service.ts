@@ -32,17 +32,7 @@ export class ApiService {
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'An unknown error occurred!';
-
-    if (error.error instanceof ErrorEvent) {
-      // Client-side or network error
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // Backend returned an unsuccessful response code
-      errorMessage = error.error?.message || `Error Code: ${error.status}\nMessage: ${error.message}`;
-    }
-
     console.error('API Error:', error);
-    return throwError(() => new Error(errorMessage));
+    return throwError(() => error); // Return the original error instead of creating a new one
   }
 }
