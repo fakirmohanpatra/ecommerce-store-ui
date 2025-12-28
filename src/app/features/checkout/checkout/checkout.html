@@ -1,1 +1,41 @@
-<p>checkout works!</p>
+<div class="checkout">
+  <h1>Checkout</h1>
+  <div *ngIf="cart && cart.items.length > 0; else emptyCart">
+    <mat-card class="checkout-card">
+      <mat-card-header>
+        <mat-card-title>Order Summary</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="order-items">
+          <div *ngFor="let item of cart.items" class="order-item">
+            <span>{{ item.name }} (x{{ item.quantity }})</span>
+            <span>${{ item.subtotal.toFixed(2) }}</span>
+          </div>
+        </div>
+        <div class="order-total">
+          <strong>Total: ${{ cart.totalAmount.toFixed(2) }}</strong>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="checkout-card">
+      <mat-card-header>
+        <mat-card-title>Payment & Discount</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-form-field>
+          <mat-label>Coupon Code (optional)</mat-label>
+          <input matInput [(ngModel)]="couponCode">
+        </mat-form-field>
+        <p>Payment method: Cash on Delivery (simulated)</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="checkout()">Place Order</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <ng-template #emptyCart>
+    <p>Your cart is empty. Add some items before checkout.</p>
+  </ng-template>
+</div>

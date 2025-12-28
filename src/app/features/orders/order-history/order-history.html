@@ -1,1 +1,32 @@
-<p>order-history works!</p>
+<div class="order-history">
+  <h1>Order History</h1>
+  <div *ngIf="orders.length > 0; else noOrders">
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let order of orders">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Order #{{ order.orderNumber }}</mat-panel-title>
+          <mat-panel-description>
+            {{ order.createdAt | date:'medium' }} - Total: ${{ order.totalAmount.toFixed(2) }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="order-details">
+          <p><strong>Order ID:</strong> {{ order.orderId }}</p>
+          <p><strong>Payment Status:</strong> {{ order.paymentStatus }}</p>
+          <p><strong>Subtotal:</strong> ${{ order.subtotal.toFixed(2) }}</p>
+          <p><strong>Discount:</strong> ${{ order.discountAmount.toFixed(2) }}</p>
+          <p *ngIf="order.couponCode"><strong>Coupon:</strong> {{ order.couponCode }}</p>
+          <h3>Items:</h3>
+          <ul>
+            <li *ngFor="let item of order.items">
+              {{ item.name }} - Quantity: {{ item.quantity }} - Price: ${{ item.pricePerUnit.toFixed(2) }} - Subtotal: ${{ item.subtotal.toFixed(2) }}
+            </li>
+          </ul>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+  <ng-template #noOrders>
+    <p>No orders found.</p>
+  </ng-template>
+</div>

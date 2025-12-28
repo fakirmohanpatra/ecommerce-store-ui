@@ -39,11 +39,7 @@ export class ApiService {
       errorMessage = `Error: ${error.error.message}`;
     } else {
       // Backend returned an unsuccessful response code
-      if (error.error && error.error.message) {
-        errorMessage = error.error.message;
-      } else {
-        errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-      }
+      errorMessage = error.error?.message || `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
 
     console.error('API Error:', error);
